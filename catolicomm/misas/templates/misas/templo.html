@@ -1,0 +1,6 @@
+<h1>{{ templo.nombre }}</h1>
+<ul>
+    {% for misa in templo.misa_set.all %}
+        <li>{{ misa.get_nombre_dia }} - {{ misa.hora_inicio }}</li>
+    {% endfor %}
+</ul>

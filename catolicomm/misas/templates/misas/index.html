@@ -1,0 +1,9 @@
+{% if lista_templos %}
+    <ul>
+    {% for templo in lista_templos %}
+        <li><a href="{% url 'templo' templo.id %}">{{ templo.nombre }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No se han registrado templos aún.</p>
+{% endif %}

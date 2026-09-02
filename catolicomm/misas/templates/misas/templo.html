@@ -14,8 +14,8 @@
 
     <h1>{{ templo.nombre }}</h1>
     <ul>
-        {% for misa in templo.misa_set.all %}
-        <li>{{ misa.get_nombre_dia }} - {{ misa.hora_inicio }}</li>
+        {% for dia_con_misa, horas in templo.get_misas.items %}
+        <li>{{ dia_con_misa }} - {{ horas }}</li>
         {% endfor %}
     </ul>
 

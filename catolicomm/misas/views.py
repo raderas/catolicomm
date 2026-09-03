@@ -1,11 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
+from django.views import generic
 from django.shortcuts import render, get_object_or_404
 
-from .models import Templo, Misa
+from .models import Templo, Servicio
 
-# Create your views here.
+class TemploView(generic.DetailView):
+    model = Templo
+    template_name = "misas/templo.html"
+
 def index(request):
     lista_templos = Templo.objects.all()
     context= {"lista_templos": lista_templos}
@@ -15,6 +19,7 @@ def templo(request, templo_id):
     templo = get_object_or_404(Templo, pk=templo_id)
     return render(request, 'misas/templo.html', {'templo': templo})
 
+#TODO: Fix and use this view
 def nuevo_templo(request):
     nuevo_templo=Templo()
     nuevo_templo.nombre=request.POST["nombre_templo"]

@@ -1,40 +1,128 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Templo - {{ templo.nombre }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+{% block title %}{{ templo.nombre }} - Detalle{% endblock %}
 
-</head>
+{% block content %}
+<!-- Botón Volver -->
+<div class="mb-3">
+    <a href="{% url 'misas:index' %}" class="text-brand-muted text-decoration-none small">
+        <i class="bi bi-arrow-left me-1"></i> Volver al listado
+    </a>
+</div>
 
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <!-- Brand /Logo -->
-            <a class="navbar-brand" href="{% url 'misas:index' %}">Catolicomm</a>
+<!-- Header del Templo -->
+<div class="card bg-surface border-subtle shadow-sm rounded-3 overflow-hidden mb-4">
+    <div class="row g-0">
+        <!-- Imagen del Templo -->
+        <div class="col-12 col-md-5">
+            {% if templo.imagen %}
+                <img src="{{ templo.imagen.url }}" class="img-fluid h-100 w-100" alt="{{ templo.nombre }}" style="object-fit: cover; min-height: 220px;">
+            {% else %}
+                <div class="bg-cream-accent d-flex align-items-center justify-content-center h-100" style="min-height: 220px;">
+                    <i class="bi bi-church text-brand-muted display-2"></i>
+                </div>
+            {% endif %}
+        </div>
 
-            <!-- Mobile hamburguer Button -->
-            <button class="navbar-toggler" tyoe="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aira-label="Toggle nvigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <!-- Información General -->
+        <div class="col-12 col-md-7 p-4 d-flex flex-column justify-content-between">
+            <div>
+                <h1 class="font-serif text-brand-primary fw-bold mb-2">{{ templo.nombre }}</h1>
+                <p class="text-brand-muted mb-3">
+                    <i class="bi bi-geo-alt-fill text-warning me-2"></i>{{ templo.direccion }}
+                </p>
+                {% if templo.telefono %}
+                    <p class="text-brand-muted small mb-3">
+                        <i class="bi bi-telephone-fill me-2"></i>{{ templo.telefono }}
+                    </p>
+                {% endif %}
+            </div>
 
-            <!-- Collapsible menu links -->
-            <div class="collapse navbar-collapse" id="navbar">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-curret="page" href="#">Inicio</a>
-                    </li>
-                    <!-- Other elements in <li> tags -->
-                </ul>
+            <!-- Acciones Rápidas -->
+            <div class="d-flex gap-2 pt-3 border-top border-subtle">
+                <a href="https://maps.google.com/?q={{ templo.direccion|urlencode }}" target="_blank" class="btn btn-gold btn-sm">
+                    <i class="bi bi-map-fill me-1"></i> Cómo llegar
+                </a>
+                {% if templo.telefono %}
+                    <a href="tel:{{ templo.telefono }}" class="btn btn-outline-brand btn-sm">
+                        <i class="bi bi-telephone me-1"></i> Llamar
+                    </a>
+                {% endif %}
             </div>
         </div>
-    </nav>
+    </div>
+</div>
+
+<!-- Estructura Principal: Horarios y Sidebar -->
+<div class="row g-4">
+    <!-- Columna Izquierda: Horarios de Misas y Servicios -->
+    <div class="col-12 col-lg-8">
+        <div class="card bg-surface border-subtle shadow-sm rounded-3 p-4">
+            <h3 class="font-serif text-brand-primary h4 mb-3">Horario de Servicios</h3>
+
+            <!-- Navegación por Pestañas (Días) -->
+            <ul class="nav nav-tabs border-subtle mb-3" id="horariosTab" role="tablist">
+                {% for tipo_servicio, horario in templo.get_servicios.items %}
+                   <li class="nav-item" role=""presentation">
+                    <button class="nav-link {% if forloop.first %}active{% endif %} text-brand-primary fw-medium" id="servicio-tab{{ forloop.counter }}" data-bs-toggle="tab" data-bs-target="#tipo-servicio-{{ forloop.counter }}" type="button" role="tab">
+                        {{ tipo_servicio }}
+                    </button>
+                   </li>
+                 {% endfor %}
+            </ul>
+
+            <!-- Contenido de Pestañas -->
+            <div class="tab-content" id="horariosTabContent">
+                
+                {% for tipo_servicio, horario in templo.get_servicios.items %}
+                
+                <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="tipo-servicio-{{ forloop.counter }}" role="tabpanel">
+                    <div class="list-group list-group-flush">
+                        {% for dia_servicios, horas in horario.items %}
+                        <div class="list-group-item bg-transparent border-subtle d-flex justify-content-between align-items-center py-3">
+                            <span class="fw-bold text-brand-primary fs-5 me-2">
+                                <i class="bi bi-clock text-warning me-1"></i> {{ dia_servicios }} - {{ horas }}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div> 
+
+                {% endfor %}
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Columna Derecha: Avisos Parroquiales u Oficina -->
+    <!-- <div class="col-12 col-lg-4">
+        <div class="card bg-surface border-subtle shadow-sm rounded-3 p-4 mb-4">
+            <h4 class="font-serif text-brand-primary h5 mb-3">
+                <i class="bi bi-info-circle text-warning me-2"></i>Despacho Parroquial
+            </h4>
+            <p class="text-brand-muted small mb-2">
+                <strong>Atención:</strong> Lunes a Viernes de 8:00 a 12:00 y de 14:00 a 17:00 hrs.
+            </p>
+            <p class="text-brand-muted small mb-0">
+                Para trámites de bautismos, bodas o intenciones de misa, favor acudir en horario de oficina.
+            </p>
+        </div>
+
+        <div class="card bg-cream-accent border-subtle p-3 rounded-3">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-exclamation-triangle-fill text-warning fs-3 me-3"></i>
+                <div>
+                    <h6 class="fw-bold text-brand-primary mb-1">¿Horarios desactualizados?</h6>
+                    <small class="text-brand-muted">Si notas algún cambio en los horarios, puedes reportarlo a la administración.</small>
+                </div>
+            </div>
+        </div>
+    </div> -->
+</div>
+{% endblock %}
 
 
+<!-- 
     <h1>{{ templo.nombre }}</h1>
 
     {% for tipo_servicio, horario in templo.get_servicios.items %}
@@ -44,12 +132,4 @@
                 <li>{{ dia_servicios }} - {{ horas }}</li>
             </ul>
             {% endfor %}
-    {% endfor %}
-
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-                crossorigin="anonymous"></script>
-
-</body>
-
-</html>
+    {% endfor %}-->

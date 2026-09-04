@@ -14,7 +14,7 @@ class Templo(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     nombre = models.CharField(max_length=100)
     direccion = models.CharField(max_length=1000)
-    alias = models.CharField("otro nombre conocido", max_length=100)
+    alias = models.CharField("otro nombre conocido", max_length=100, blank=True, default="")
 
     def get_servicios(self) -> dict:
         servicios={}
@@ -31,6 +31,11 @@ class Templo(BaseModel):
                 servicios[tipo_servicio][dia_semana] = [hora_inicio]
 
         return servicios
+
+    def proxima_misa(self) -> dict:
+        proxima_misa={}
+
+        proxima_misa
     
     def __str__(self):
         return f"Templo: {self.nombre}"

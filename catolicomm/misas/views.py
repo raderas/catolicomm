@@ -1,3 +1,6 @@
+from typing import Any
+
+from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
@@ -9,6 +12,14 @@ from .models import Templo, Servicio
 class TemploView(generic.DetailView):
     model = Templo
     template_name = "misas/templo.html"
+
+class IndexView(generic.ListView):
+    template_name="misas/index.html"
+    context_object_name= "lista_templos"
+
+    def get_queryset(self) -> QuerySet[Any, Any]:
+        """ Devolver listado de templos. """
+        return Templo.objects.all()[:5]
 
 def index(request):
     lista_templos = Templo.objects.all()

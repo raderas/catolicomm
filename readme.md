@@ -1,6 +1,8 @@
 # Catolicomm
 
-Catolicom es una aplicación web para que la comunidad católica comparta información básica de templos, horarios de misas y horarios de confesiones. Para poder estar informado al momento de decidir a qué hora y dónde ir a misa o buscar la confesión.
+Catolicom es una aplicación web para que la comunidad católica comparta información básica de templos, horarios de misas, confesiones y otros servicios. Cuántas veces no nos hemos encontrado investigando en redes sociales a qué hora puedo ir a misa un día en específico o a qué hora y ddónde puedo buscar el sacramento de la reconciliación.
+
+Catolicomm busca ayudar a la comunidad a compartir esa información de manera centralizada. Actualizada y enriquecida por la misma comunidad católica para que se nos facilite acercarnos a Jesús.
 
 ## Tecnología
 

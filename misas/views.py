@@ -8,6 +8,7 @@ from django.views import generic
 from django.shortcuts import render, get_object_or_404
 
 from .models import Templo, Servicio
+from .forms import TemploForm
 
 class TemploView(generic.DetailView):
     model = Templo
@@ -29,6 +30,17 @@ def index(request):
 def templo(request, templo_id):
     templo = get_object_or_404(Templo, pk=templo_id)
     return render(request, 'misas/templo.html', {'templo': templo})
+
+# Testing form
+def templo_form(request):
+    if request.method=='POST':
+        form = TemploForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = TemploForm()
+    return render(request,'misas/newtemplo.html',{'form':form})
+
 
 #TODO: Fix and use this view
 def nuevo_templo(request):

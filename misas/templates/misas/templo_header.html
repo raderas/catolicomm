@@ -1,0 +1,46 @@
+{% block templo_header %}
+
+<!-- Header del Templo -->
+<div class="card bg-surface border-subtle shadow-sm rounded-3 overflow-hidden mb-4">
+    <div class="row g-0">
+        <!-- Imagen del Templo -->
+        <div class="col-12 col-md-5">
+            {% if templo.imagen %}
+                <img src="{{ templo.imagen.url }}" class="img-fluid h-100 w-100" alt="{{ templo.nombre }}" style="object-fit: cover; min-height: 220px;">
+            {% else %}
+                <div class="bg-cream-accent d-flex align-items-center justify-content-center h-100" style="min-height: 220px;">
+                    <i class="bi bi-church text-brand-muted display-2"></i>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Información General -->
+        <div class="col-12 col-md-7 p-4 d-flex flex-column justify-content-between">
+            <div>
+                <h1 class="font-serif text-brand-primary fw-bold mb-2">{{ templo.nombre }}</h1>
+                <p class="text-brand-muted mb-3">
+                    <i class="bi bi-geo-alt-fill text-warning me-2"></i>{{ templo.direccion }}
+                </p>
+                {% if templo.telefono %}
+                    <p class="text-brand-muted small mb-3">
+                        <i class="bi bi-telephone-fill me-2"></i>{{ templo.telefono }}
+                    </p>
+                {% endif %}
+            </div>
+
+            <!-- Acciones Rápidas -->
+            <div class="d-flex gap-2 pt-3 border-top border-subtle">
+                <a href="https://maps.google.com/?q={{ templo.direccion|urlencode }}" target="_blank" class="btn btn-gold btn-sm">
+                    <i class="bi bi-map-fill me-1"></i> Cómo llegar
+                </a>
+                {% if templo.telefono %}
+                    <a href="tel:{{ templo.telefono }}" class="btn btn-outline-brand btn-sm">
+                        <i class="bi bi-telephone me-1"></i> Llamar
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

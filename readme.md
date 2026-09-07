@@ -30,3 +30,7 @@ Ejecución del servicio
 ```
 python manage.py runserver
 ```
+<<<<<<< HEAD
+=======
+
+>>>>>>> d75df81 (Macbook pro commit)

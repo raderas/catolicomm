@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <form action="{% url 'misas:nuevo_templo' %}" method="POST">
+    <form action="{% url 'misas:nuevo_templo' %}" method="post">
         {% csrf_token %} 
         {{ form.as_p }}
         <!-- <fieldset>

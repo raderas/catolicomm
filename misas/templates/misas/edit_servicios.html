@@ -1,17 +1,81 @@
-{% extends "misas/base.html" %}
+{% extends "base.html" %}
 
-{% block title %}{{templo.nombre}} - Editar servicios{% endblock %}
+{% block title %}{{ templo.nombre }} - Editar servicios{% endblock %}
 
 {% block content %}
-<!-- Agregar un card que muestre los datos del templo y luego secciones para llenar cada servicio -->
- {% %}
- {% include "misas/templo_header.html" %}
-<form action="#" method="POST">
-    {% csrf_token %}
-    <div>
-        
-    </div>
-    <div>
 
-    </div>
+{% include "misas/templo_header.html" %}
+
+<div class="card bg-surface border-subtle shadow-sm rounded-3 p-4 mb-4">
+    <h2 class="font-serif text-brand-primary h4 mb-3">Agregar servicio</h2>
+    <form action="{% url 'misas:templo_servicios' templo.id %}" method="post">
+        {% csrf_token %}
+        {% if mensaje %}
+            <div class="alert alert-success" role="alert">{{ mensaje }}</div>
+        {% endif %}
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>
+        {% endif %}
+        <div class="row g-3">
+            <div class="col-12 col-md-6">
+                <label for="{{ form.tipo_servicio.id_for_label }}" class="form-label">{{ form.tipo_servicio.label }}</label>
+                {{ form.tipo_servicio }}
+                {% if form.tipo_servicio.errors %}
+                    <div class="invalid-feedback d-block">{{ form.tipo_servicio.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="col-12 col-md-6">
+                <label for="{{ form.dia_de_semana.id_for_label }}" class="form-label">{{ form.dia_de_semana.label }}</label>
+                {{ form.dia_de_semana }}
+                {% if form.dia_de_semana.errors %}
+                    <div class="invalid-feedback d-block">{{ form.dia_de_semana.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="col-12 col-md-6">
+                <label for="{{ form.hora_inicio.id_for_label }}" class="form-label">{{ form.hora_inicio.label }}</label>
+                {{ form.hora_inicio }}
+                {% if form.hora_inicio.errors %}
+                    <div class="invalid-feedback d-block">{{ form.hora_inicio.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="col-12 col-md-6">
+                <label for="{{ form.hora_fin.id_for_label }}" class="form-label">{{ form.hora_fin.label }}</label>
+                {{ form.hora_fin }}
+                {% if form.hora_fin.errors %}
+                    <div class="invalid-feedback d-block">{{ form.hora_fin.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="mt-4">
+            <button type="submit" class="btn btn-gold">Guardar</button>
+        </div>
+    </form>
+</div>
+
+<div class="card bg-surface border-subtle shadow-sm rounded-3 p-4 mb-4">
+    <h2 class="font-serif text-brand-primary h4 mb-3">Servicios registrados</h2>
+    {% with servicios=templo.get_servicios %}
+        {% if servicios %}
+            {% for tipo_servicio, horario in servicios.items %}
+                <div class="mb-4">
+                    <h3 class="font-serif text-brand-primary h5 mb-2">{{ tipo_servicio }}</h3>
+                    <div class="list-group list-group-flush">
+                        {% for dia_servicios, horas in horario.items %}
+                            <div class="list-group-item bg-transparent border-subtle d-flex justify-content-between align-items-center py-3 px-0">
+                                <span class="fw-bold text-brand-primary">
+                                    <i class="bi bi-clock text-warning me-1"></i>{{ dia_servicios }}
+                                </span>
+                                <span class="text-brand-muted">{{ horas|join:", " }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="bg-cream-accent p-3 rounded-2 border border-subtle">
+                <p class="text-brand-muted mb-0">Aún no hay horarios registrados para este templo.</p>
+            </div>
+        {% endif %}
+    {% endwith %}
+</div>
 {% endblock %}

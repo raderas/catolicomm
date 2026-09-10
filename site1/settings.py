@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
 import dotenv
 dotenv.load_dotenv()
@@ -95,6 +96,15 @@ DATABASES = {
     }
 }
 
+if "test" in sys.argv:
+    SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY") or "test-secret-key"
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
+        }
+    }
+
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
 
@@ -124,6 +134,8 @@ TIME_ZONE = 'America/El_Salvador'
 USE_I18N = True
 
 USE_TZ = True
+
+LOGIN_URL = "/accounts/login/"
 
 
 # Static files (CSS, JavaScript, Images)

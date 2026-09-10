@@ -9,4 +9,5 @@ urlpatterns = [
     path("templos/", views.IndexView.as_view(), name="lista_templos"),
     path("templo/<uuid:pk>/", views.TemploView.as_view(), name="templo"), 
     path("templo/nuevo/", views.templo_form, name="nuevo_templo"),
+    path("templo/<uuid:id_templo>/servicios/", views.templo_servicios_edit, name="templo_servicios"),
 ]

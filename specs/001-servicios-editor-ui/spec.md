@@ -4,7 +4,7 @@
 
 **Created**: 2026-09-10
 
-**Status**: Draft
+**Status**: Implemented
 
 **Input**: User description: "embellece el template misas/templates/misas/edit_servicios.html para que muestre los servicios creados en la parte baja de la pantalla y el formulario para crear nuevos servicios en donde ya está ubicado el form. Sigue los patrones de la pagina index.html con bootstrap. Esta página solo debe estar accesible para usuarios logueados en la aplicación"
 

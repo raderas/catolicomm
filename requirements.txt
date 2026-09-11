@@ -1,3 +1,4 @@
+pre-commit
 python-dotenv
 django
 psycopg2-binary

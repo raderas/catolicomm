@@ -4,20 +4,38 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('misas', '0004_alter_servicio_hora_fin'),
+        ("misas", "0004_alter_servicio_hora_fin"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='servicio',
-            name='dia_de_semana',
-            field=models.CharField(choices=[('DOM', 'Domingo'), ('LUN', 'Lunes'), ('MAR', 'Martes'), ('MIE', 'Miércoles'), ('JUE', 'Jueves'), ('VIE', 'Viernes'), ('SAB', ' Sábado')], max_length=3),
+            model_name="servicio",
+            name="dia_de_semana",
+            field=models.CharField(
+                choices=[
+                    ("DOM", "Domingo"),
+                    ("LUN", "Lunes"),
+                    ("MAR", "Martes"),
+                    ("MIE", "Miércoles"),
+                    ("JUE", "Jueves"),
+                    ("VIE", "Viernes"),
+                    ("SAB", " Sábado"),
+                ],
+                max_length=3,
+            ),
         ),
         migrations.AlterField(
-            model_name='servicio',
-            name='servicio',
-            field=models.CharField(choices=[('MI', 'Eucaristia'), ('CO', 'Confesiones'), ('SA', 'Capilla del Santísimo'), ('AD', 'Adoración Eucarística')], max_length=2),
+            model_name="servicio",
+            name="servicio",
+            field=models.CharField(
+                choices=[
+                    ("MI", "Eucaristia"),
+                    ("CO", "Confesiones"),
+                    ("SA", "Capilla del Santísimo"),
+                    ("AD", "Adoración Eucarística"),
+                ],
+                max_length=2,
+            ),
         ),
     ]

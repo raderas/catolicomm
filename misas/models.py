@@ -1,42 +1,47 @@
-from django.db import models
-from django.utils.translation import gettext_lazy as _
-import uuid
-from django.utils import timezone
 import datetime
+import uuid
+
+from django.db import models
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 # Dict para homologar los dias con el resultado del numero de dia devuelto por datetime
 DIAS_MAP = {
-        'LUN': 0,
-        'MAR': 1,
-        'MIE': 2,
-        'JUE': 3,
-        'VIE': 4,
-        'SAB': 5,
-        'DOM': 6,
-    }
+    "LUN": 0,
+    "MAR": 1,
+    "MIE": 2,
+    "JUE": 3,
+    "VIE": 4,
+    "SAB": 5,
+    "DOM": 6,
+}
+
 
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        abstract=True
+        abstract = True
+
 
 class Templo(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     nombre = models.CharField(max_length=100)
     direccion = models.CharField(max_length=1000)
-    alias = models.CharField("otro nombre conocido", max_length=100, blank=True, default="")
-    imagen_url = models.URLField("Imagen", max_length=500,null=True, blank=True)
+    alias = models.CharField(
+        "otro nombre conocido", max_length=100, blank=True, default=""
+    )
+    imagen_url = models.URLField("Imagen", max_length=500, null=True, blank=True)
 
     def get_servicios(self) -> dict:
-        servicios={}
-        
+        servicios = {}
+
         for servicio in self.servicio_set.all():
-            dia_semana=servicio.get_dia_de_semana_display()
+            dia_semana = servicio.get_dia_de_semana_display()
             tipo_servicio = servicio.get_tipo_servicio_display()
             if tipo_servicio not in servicios:
-                servicios[tipo_servicio]={}
+                servicios[tipo_servicio] = {}
             hora_inicio = servicio.hora_inicio.strftime("%H:%M")
             if dia_semana in servicios[tipo_servicio]:
                 servicios[tipo_servicio][dia_semana].append(hora_inicio)
@@ -53,12 +58,12 @@ class Templo(BaseModel):
         ahora = timezone.localtime(timezone.now())
         fecha_actual = ahora.date()
         dia_semana_actual = fecha_actual.weekday()  # Lunes: 0, Domingo: 6
-        
+
         # 1. Obtener todas las misas
         misas = self.servicio_set.all().filter(tipo_servicio=Servicio.TipoServicio.MISA)
 
         candidatas = []
-        
+
         for misa in misas:
             target_weekday = DIAS_MAP.get(misa.dia_de_semana)
             if target_weekday is None:
@@ -67,9 +72,7 @@ class Templo(BaseModel):
             # Calcular cuántos días faltan para la misa
             dias_diferencia = (target_weekday - dia_semana_actual) % 7
 
-            fecha_misa = fecha_actual + datetime.timedelta(
-                days=dias_diferencia
-            )
+            fecha_misa = fecha_actual + datetime.timedelta(days=dias_diferencia)
             datetime_misa = timezone.make_aware(
                 datetime.datetime.combine(fecha_misa, misa.hora_inicio)
             )
@@ -90,31 +93,31 @@ class Templo(BaseModel):
     def __str__(self):
         return f"Templo: {self.nombre}"
 
+
 class Servicio(BaseModel):
     class DiasSemana(models.TextChoices):
-        DOMINGO='DOM', _("Domingo")
-        LUNES='LUN', _("Lunes")
-        MARTES='MAR', _("Martes")
-        MIERCOLES='MIE', _("Miércoles")
-        JUEVES='JUE', _('Jueves')
-        VIERNES='VIE', _("Viernes")
-        SABADO='SAB', _("Sábado")
+        DOMINGO = "DOM", _("Domingo")
+        LUNES = "LUN", _("Lunes")
+        MARTES = "MAR", _("Martes")
+        MIERCOLES = "MIE", _("Miércoles")
+        JUEVES = "JUE", _("Jueves")
+        VIERNES = "VIE", _("Viernes")
+        SABADO = "SAB", _("Sábado")
 
     class TipoServicio(models.TextChoices):
-        MISA= 'MI', _('Eucaristia')
-        CONFESIONES= 'CO', _('Confesiones')
-        SANTISIMO= 'SA', _('Capilla del Santísimo')
-        ADORACION='AD', _('Adoración Eucarística')
+        MISA = "MI", _("Eucaristia")
+        CONFESIONES = "CO", _("Confesiones")
+        SANTISIMO = "SA", _("Capilla del Santísimo")
+        ADORACION = "AD", _("Adoración Eucarística")
 
-    id = models.UUIDField(primary_key=True, default = uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     templo = models.ForeignKey(Templo, on_delete=models.CASCADE)
-    tipo_servicio=models.CharField(max_length=2,choices=TipoServicio.choices)
+    tipo_servicio = models.CharField(max_length=2, choices=TipoServicio.choices)
     # el dia de la semana es un entero entre 1 y 7 siendo 1=Domingo
-    dia_de_semana = models.CharField(max_length=3,choices=DiasSemana.choices)
+    dia_de_semana = models.CharField(max_length=3, choices=DiasSemana.choices)
     hora_inicio = models.TimeField()
-    hora_fin = models.TimeField(blank=True,null=True)
+    hora_fin = models.TimeField(blank=True, null=True)
 
-    
     @classmethod
     def obtener_proxima_misa(cls, templo=None):
         """
@@ -140,9 +143,7 @@ class Servicio(BaseModel):
             # Calcular cuántos días faltan para la misa
             dias_diferencia = (target_weekday - dia_semana_actual) % 7
 
-            fecha_misa = fecha_actual + datetime.timedelta(
-                days=dias_diferencia
-            )
+            fecha_misa = fecha_actual + datetime.timedelta(days=dias_diferencia)
             datetime_misa = timezone.make_aware(
                 datetime.datetime.combine(fecha_misa, misa.hora_inicio)
             )
@@ -163,7 +164,6 @@ class Servicio(BaseModel):
     def get_nombre_dia(self) -> str:
         """Devuelve el nombre del dia de la semana como string legible"""
         return self.get_dia_de_semana_display()
-    
+
     def __str__(self):
         return f"{self.get_tipo_servicio_display()} en {self.templo.nombre} {self.get_nombre_dia()} - {self.hora_inicio}"
-

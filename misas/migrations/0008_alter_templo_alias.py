@@ -4,15 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('misas', '0007_rename_servicio_servicio_tipo_servicio'),
+        ("misas", "0007_rename_servicio_servicio_tipo_servicio"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='templo',
-            name='alias',
-            field=models.CharField(blank=True, default='', max_length=100, verbose_name='otro nombre conocido'),
+            model_name="templo",
+            name="alias",
+            field=models.CharField(
+                blank=True,
+                default="",
+                max_length=100,
+                verbose_name="otro nombre conocido",
+            ),
         ),
     ]

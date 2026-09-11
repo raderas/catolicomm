@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('misas', '0008_alter_templo_alias'),
+        ("misas", "0008_alter_templo_alias"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='templo',
-            name='imagen_url',
-            field=models.URLField(blank=True, max_length=500, null=True, verbose_name='Imagen'),
+            model_name="templo",
+            name="imagen_url",
+            field=models.URLField(
+                blank=True, max_length=500, null=True, verbose_name="Imagen"
+            ),
         ),
     ]

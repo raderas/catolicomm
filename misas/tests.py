@@ -134,7 +134,9 @@ class ListadoServiciosTests(ServiciosEditorTestCase):
         response = self.client.get(self.editor_url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.templo.get_servicios(), {})
-        self.assertContains(response, "Aún no hay horarios registrados para este templo.")
+        self.assertContains(
+            response, "Aún no hay horarios registrados para este templo."
+        )
 
 
 class AccesoEditorTests(ServiciosEditorTestCase):
@@ -189,7 +191,9 @@ class AccesoEditorTests(ServiciosEditorTestCase):
         response = anon.get(reverse("login"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Iniciar sesión")
-        self.assertContains(response, "card bg-surface border-subtle shadow-sm rounded-3")
+        self.assertContains(
+            response, "card bg-surface border-subtle shadow-sm rounded-3"
+        )
         self.assertContains(response, "form-control")
         self.assertContains(response, "btn btn-gold")
 
@@ -199,7 +203,9 @@ class ConflictosHorarioTests(ServiciosEditorTestCase):
 
     def test_duplicate_same_type_day_start_does_not_persist(self):
         self.create_servicio(hora_inicio=time(10, 0))
-        response = self.client.post(self.editor_url, self.servicio_post_data(hora_inicio="10:00"))
+        response = self.client.post(
+            self.editor_url, self.servicio_post_data(hora_inicio="10:00")
+        )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Servicio.objects.count(), 1)
         self.assertTrue(response.context["form"].errors)

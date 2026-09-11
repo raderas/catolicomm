@@ -2,7 +2,7 @@
 
 {% block content %}
     <form action="{% url 'misas:nuevo_templo' %}" method="post">
-        {% csrf_token %} 
+        {% csrf_token %}
         {{ form.as_p }}
         <!-- <fieldset>
             <legend><h1>Nuevo Templo</h1></legend>

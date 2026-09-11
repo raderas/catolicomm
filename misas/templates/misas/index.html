@@ -12,7 +12,7 @@
                 <button class="btn btn-gold px-4 rounded-2" type="submit">Buscar</button>
             </div>
         </form>
-        
+
         <div class="d-flex gap-2 mt-3 overflow-x-auto pb-2">
             <a href="?filtro=hoy" class="badge rounded-pill bg-cream-accent text-brand-primary text-decoration-none px-3 py-2 border border-subtle">
                 <i class="bi bi-clock me-1"></i> Hoy
@@ -38,13 +38,13 @@
                     <i class="bi bi-church text-brand-muted display-4"></i>
                 </div>
             {% endif %}
-            
+
             <div class="card-body d-flex flex-column">
                 <h5 class="card-title font-serif text-brand-primary fw-bold">{{ templo.nombre }}</h5>
                 <p class="card-text text-brand-muted small mb-3">
                     <i class="bi bi-geo-alt-fill text-warning me-1"></i> {{ templo.direccion }}
                 </p>
-                
+
                 <div class="mt-auto bg-cream-accent p-2 rounded-2 border border-subtle mb-3">
                     <span class="d-block text-brand-muted extra-small fw-semibold">PRÓXIMA MISA</span>
                     <span class="text-brand-primary fw-bold">

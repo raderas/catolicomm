@@ -1,0 +1,36 @@
+repos:
+  # 1. Standard Git and File Integrity Checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace       # Strips trailing whitespace
+      - id: end-of-file-fixer         # Ensures files end with a newline
+      - id: check-yaml                # Checks syntax of YAML files
+      - id: check-toml                # Checks syntax of pyproject.toml
+      - id: check-added-large-files   # Blocks files over 500KB from being committed
+      - id: debug-statements          # Catches leftover breakpoint() or pdb statements
+
+  # 2. Ruff: Instant Linting & Formatting (Replaces Black, Isort, Flake8)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.7
+    hooks:
+      - id: ruff-check                # Linter (runs imports sorting and code fixes)
+        args: [ --fix  ]
+        exclude: (^|/)migrations/
+      - id: ruff-format               # Formatter (ensures consistent styling)
+
+  # 3. Security: Check for leaked Django Secret Keys and API Credentials
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.24.2
+    hooks:
+      - id: gitleaks
+
+  # 4. Django Specific: Check for forgotten migrations
+  - repo: local
+    hooks:
+      - id: django-check-migrations
+        name: Check for uncreated Django migrations
+        entry: .venv/bin/python manage.py makemigrations --check --dry-run
+        language: system
+        types: [python]
+        pass_filenames: false

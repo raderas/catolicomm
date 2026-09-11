@@ -4,18 +4,28 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('misas', '0005_alter_servicio_dia_de_semana_alter_servicio_servicio'),
+        ("misas", "0005_alter_servicio_dia_de_semana_alter_servicio_servicio"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='servicio',
-            name='dia_de_semana',
-            field=models.CharField(choices=[('DOM', 'Domingo'), ('LUN', 'Lunes'), ('MAR', 'Martes'), ('MIE', 'Miércoles'), ('JUE', 'Jueves'), ('VIE', 'Viernes'), ('SAB', 'Sábado')], max_length=3),
+            model_name="servicio",
+            name="dia_de_semana",
+            field=models.CharField(
+                choices=[
+                    ("DOM", "Domingo"),
+                    ("LUN", "Lunes"),
+                    ("MAR", "Martes"),
+                    ("MIE", "Miércoles"),
+                    ("JUE", "Jueves"),
+                    ("VIE", "Viernes"),
+                    ("SAB", "Sábado"),
+                ],
+                max_length=3,
+            ),
         ),
         migrations.DeleteModel(
-            name='Misa',
+            name="Misa",
         ),
     ]

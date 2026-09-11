@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('misas', '0003_servicio'),
+        ("misas", "0003_servicio"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='servicio',
-            name='hora_fin',
+            model_name="servicio",
+            name="hora_fin",
             field=models.TimeField(blank=True, null=True),
         ),
     ]

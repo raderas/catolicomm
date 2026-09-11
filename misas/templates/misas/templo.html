@@ -33,9 +33,9 @@
 
             <!-- Contenido de Pestañas -->
             <div class="tab-content" id="horariosTabContent">
-                
+
                 {% for tipo_servicio, horario in templo.get_servicios.items %}
-                
+
                     <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="tipo-servicio-{{ forloop.counter }}" role="tabpanel">
                         <div class="list-group list-group-flush">
                             {% for dia_servicios, horas in horario.items %}
@@ -46,10 +46,10 @@
                             </div>
                             {% endfor %}
                         </div>
-                    </div> 
+                    </div>
 
                 {% endfor %}
-                
+
             </div>
         </div>
     </div>

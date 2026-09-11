@@ -4,15 +4,14 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('misas', '0006_alter_servicio_dia_de_semana_delete_misa'),
+        ("misas", "0006_alter_servicio_dia_de_semana_delete_misa"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='servicio',
-            old_name='servicio',
-            new_name='tipo_servicio',
+            model_name="servicio",
+            old_name="servicio",
+            new_name="tipo_servicio",
         ),
     ]

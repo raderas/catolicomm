@@ -12,13 +12,13 @@ Catolicomm busca ayudar a la comunidad a compartir esa información de manera ce
 
 ## Ejecución
 
-Instalación de dependencias
+1. Generación de entorno virtual e instalación de dependencias
 ```
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-source .venv/bin/activate
 ```
 
-Migraciones y creación de superusuario
+2. Migraciones y creación de superusuario
 ```
 python manage.py migrate
 python manage.py createsuperuser
@@ -26,7 +26,7 @@ python manage.py createsuperuser
 Seguir las instrucciones para crear el superusuario
 
 
-Ejecución del servicio
+3. Ejecución del servicio en modo pruebas
 ```
 python manage.py runserver
 ```

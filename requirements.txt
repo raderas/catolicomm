@@ -3,3 +3,4 @@ python-dotenv
 django
 psycopg2-binary
 djlint
+Pillow

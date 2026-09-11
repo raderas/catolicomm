@@ -2,7 +2,7 @@ from typing import Any
 
 from django.contrib.auth.decorators import login_required
 from django.db.models.query import QuerySet
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic
 
 from .forms import ServicioForm, TemploForm
@@ -34,15 +34,29 @@ def templo(request, templo_id):
     return render(request, "misas/templo.html", {"templo": templo})
 
 
-# Testing form
+@login_required
 def templo_form(request):
     if request.method == "POST":
-        form = TemploForm(request.POST)
+        form = TemploForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            templo = form.save()
+            return redirect("misas:templo", pk=templo.pk)
     else:
         form = TemploForm()
     return render(request, "misas/newtemplo.html", {"form": form})
+
+
+@login_required
+def templo_edit(request, id_templo):
+    templo = get_object_or_404(Templo, pk=id_templo)
+    if request.method == "POST":
+        form = TemploForm(request.POST, request.FILES, instance=templo)
+        if form.is_valid():
+            form.save()
+            return redirect("misas:templo", pk=templo.pk)
+    else:
+        form = TemploForm(instance=templo)
+    return render(request, "misas/edit_templo.html", {"form": form, "templo": templo})
 
 
 @login_required

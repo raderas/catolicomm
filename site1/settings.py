@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 
 import os
 import sys
+import tempfile
 from pathlib import Path
 
 import dotenv
@@ -145,6 +146,12 @@ LOGIN_URL = "/accounts/login/"
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = "static/"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+if "test" in sys.argv:
+    MEDIA_ROOT = Path(tempfile.mkdtemp())
 
 
 # Email

@@ -32,7 +32,9 @@ class Templo(BaseModel):
     alias = models.CharField(
         "otro nombre conocido", max_length=100, blank=True, default=""
     )
-    imagen_url = models.URLField("Imagen", max_length=500, null=True, blank=True)
+    imagen = models.ImageField(
+        "Fotografía", upload_to="templos/", null=True, blank=True
+    )
 
     def get_servicios(self) -> dict:
         servicios = {}

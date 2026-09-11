@@ -2,14 +2,59 @@ from typing import ClassVar
 
 from django import forms
 from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
 
 from misas.models import Servicio, Templo
+
+MAX_IMAGEN_BYTES = 5 * 1024 * 1024
 
 
 class TemploForm(forms.ModelForm):
     class Meta:
         model = Templo
-        fields = ("nombre", "direccion", "alias")
+        fields = ("nombre", "direccion", "alias", "imagen")
+        labels: ClassVar[dict[str, str]] = {
+            "nombre": "Nombre",
+            "direccion": "Dirección",
+            "alias": "Otro nombre conocido",
+            "imagen": "Fotografía",
+        }
+        widgets: ClassVar[dict[str, forms.Widget]] = {
+            "nombre": forms.TextInput(attrs={"class": "form-control"}),
+            "direccion": forms.TextInput(attrs={"class": "form-control"}),
+            "alias": forms.TextInput(attrs={"class": "form-control"}),
+            "imagen": forms.FileInput(
+                attrs={
+                    "class": "form-control",
+                    "accept": "image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp",
+                }
+            ),
+        }
+        error_messages: ClassVar[dict[str, dict[str, str]]] = {
+            "imagen": {
+                "invalid": "El archivo no es una imagen válida.",
+                "invalid_image": "El archivo no es una imagen válida.",
+            },
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["imagen"].required = False
+        self.fields["imagen"].validators.append(
+            FileExtensionValidator(
+                allowed_extensions=["jpg", "jpeg", "png", "webp"],
+                message="Sube una imagen JPEG, PNG o WebP.",
+            )
+        )
+
+    def clean_imagen(self):
+        imagen = self.cleaned_data.get("imagen")
+        if not imagen:
+            return imagen
+        size = getattr(imagen, "size", None)
+        if size is not None and size > MAX_IMAGEN_BYTES:
+            raise ValidationError("La fotografía no puede superar 5 MB.")
+        return imagen
 
 
 class ServicioForm(forms.ModelForm):

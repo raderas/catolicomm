@@ -59,8 +59,12 @@
         <div class="card bg-surface border-subtle shadow-sm rounded-3 p-4 mb-4">
             <h4 class="font-serif text-brand-primary h5 mb-3">
                 <i class="bi bi-info-circle text-warning me-2"></i>
-                <a href="{% url 'misas:templo_servicios' templo.id %}">Agregar Servicio</a>
+                Editar
             </h4>
+            <div class="d-flex flex-column gap-2">
+                <a href="{% url 'misas:editar_templo' templo.id %}">Editar templo</a>
+                <a href="{% url 'misas:templo_servicios' templo.id %}">Agregar Servicio</a>
+            </div>
         </div>
 
         <div class="card bg-cream-accent border-subtle p-3 rounded-3">

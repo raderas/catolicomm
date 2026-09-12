@@ -20,6 +20,7 @@ dist/
 .env
 .env*
 .vscode/
+.cursor/
 
 LocalReadme.md
 media/

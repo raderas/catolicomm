@@ -6,7 +6,7 @@ Catolicomm busca ayudar a la comunidad a compartir esa información de manera ce
 
 ## Tecnología
 
-- Python 3.12.3
+- Python 3.13.0
 - Django 6.1
 - sqlite
 

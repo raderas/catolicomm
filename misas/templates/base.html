@@ -73,9 +73,17 @@
             </button>
             <div class="collapse navbar-collapse" id="navContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link text-brand-primary fw-medium" href="#">Templos</a></li>
-                    <li class="nav-item"><a class="nav-link text-brand-primary fw-medium" href="#">Horarios</a></li>
-                    <li class="nav-item"><a class="nav-link text-brand-primary fw-medium" href="#">Mapa</a></li>
+                    <li class="nav-item"><a class="nav-link text-brand-primary fw-medium" href="{% url 'misas:index' %}">Inicio</a></li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link text-brand-primary fw-medium{% if request.resolver_match.url_name == 'perfil' %} active{% endif %}" href="{% url 'misas:perfil' %}">
+                            <i class="bi bi-person-circle me-1" aria-hidden="true"></i>Mi perfil
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link text-brand-primary fw-medium" href="{% url 'login' %}">Iniciar sesión</a></li>
+                    {% endif %}
+                    <!--<li class="nav-item"><a class="nav-link text-brand-primary fw-medium" href="#">Mapa</a></li>-->
                 </ul>
             </div>
         </div>

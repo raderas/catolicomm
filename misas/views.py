@@ -78,3 +78,8 @@ def templo_servicios_edit(request, id_templo):
     ctx["form"] = form
     ctx["templo"] = templo
     return render(request, "misas/edit_servicios.html", ctx)
+
+
+@login_required
+def mi_perfil(request):
+    return render(request, "misas/perfil.html")

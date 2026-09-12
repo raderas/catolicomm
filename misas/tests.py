@@ -635,3 +635,181 @@ class AccesoFichaTemploTests(TemploFichaTestCase):
         self.assertContains(templo_response, self.templo.nombre)
         self.assertContains(templo_response, "Editar templo")
         self.assertContains(templo_response, "Agregar Servicio")
+
+
+class NavbarPerfilTestCase(TestCase):
+    """Shared helpers for session-aware navbar and Mi perfil."""
+
+    def setUp(self):
+        user_model = get_user_model()
+        self.user = user_model.objects.create_user(
+            username="perfilista",
+            password="password123",
+            first_name="Ana",
+            last_name="García",
+            email="ana@example.com",
+        )
+        self.user_empty = user_model.objects.create_user(
+            username="vacio",
+            password="password123",
+        )
+        self.client = Client()
+        self.anon = Client()
+        self.templo = Templo.objects.create(
+            nombre="Parroquia San José",
+            direccion="Calle Principal 1",
+        )
+
+    @property
+    def perfil_url(self):
+        return reverse("misas:perfil")
+
+    @property
+    def index_url(self):
+        return reverse("misas:index")
+
+    @property
+    def templo_url(self):
+        return reverse("misas:templo", args=[self.templo.id])
+
+    def login(self, user=None):
+        self.client.force_login(user or self.user)
+
+
+class NavbarIniciarSesionTests(NavbarPerfilTestCase):
+    """US1: anonymous navbar shows Iniciar sesión; authenticated navbar hides it."""
+
+    def test_anonymous_index_and_templo_show_spanish_login_link(self):
+        for url in (self.index_url, self.templo_url):
+            with self.subTest(url=url):
+                response = self.anon.get(url)
+                self.assertEqual(response.status_code, 200)
+                self.assertContains(response, ">Iniciar sesión</a>")
+                self.assertContains(response, reverse("login"))
+                self.assertNotContains(response, ">Login</a>")
+                self.assertNotContains(response, "Mi perfil")
+
+    def test_authenticated_index_hides_iniciar_sesion(self):
+        self.login()
+        response = self.client.get(self.index_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, ">Iniciar sesión</a>")
+
+
+class NavbarMiPerfilTests(NavbarPerfilTestCase):
+    """US2: authenticated navbar shows Mi perfil with icon; anonymous does not."""
+
+    def test_authenticated_index_shows_mi_perfil_with_icon(self):
+        self.login()
+        response = self.client.get(self.index_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Mi perfil")
+        self.assertContains(response, "bi-person-circle")
+        self.assertContains(response, self.perfil_url)
+        self.assertNotContains(response, ">Iniciar sesión</a>")
+
+    def test_anonymous_index_hides_mi_perfil(self):
+        response = self.anon.get(self.index_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, "Mi perfil")
+
+
+class MiPerfilConsultaTests(NavbarPerfilTestCase):
+    """US3: authenticated user sees own account fields; empties show No registrado."""
+
+    def test_filled_profile_shows_own_fields(self):
+        self.login()
+        response = self.client.get(self.perfil_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Usuario")
+        self.assertContains(response, "Nombre")
+        self.assertContains(response, "Apellidos")
+        self.assertContains(response, "Correo electrónico")
+        self.assertContains(response, "Fecha de alta")
+        self.assertContains(response, self.user.username)
+        self.assertContains(response, self.user.first_name)
+        self.assertContains(response, self.user.last_name)
+        self.assertContains(response, self.user.email)
+        self.assertContains(response, str(self.user.date_joined.year))
+        self.assertContains(
+            response, "card bg-surface border-subtle shadow-sm rounded-3"
+        )
+        self.assertNotContains(response, self.user.password)
+        self.assertNotContains(response, "password123")
+        self.assertNotContains(response, 'name="first_name"')
+        self.assertNotContains(response, "Guardar")
+        self.assertContains(response, "Cerrar sesión")
+        self.assertContains(response, "csrfmiddlewaretoken")
+        self.assertContains(response, "fw-medium active")
+
+    def test_empty_optional_fields_show_no_registrado(self):
+        self.login(self.user_empty)
+        response = self.client.get(self.perfil_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.user_empty.username)
+        self.assertContains(response, "No registrado")
+        self.assertNotContains(response, self.user.username)
+        self.assertNotContains(response, self.user.email)
+
+    def test_second_user_does_not_see_first_username(self):
+        other = get_user_model().objects.create_user(
+            username="otro",
+            password="password123",
+        )
+        self.login(other)
+        response = self.client.get(self.perfil_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "otro")
+        self.assertNotContains(response, self.user.username)
+
+
+class MiPerfilAuthTests(NavbarPerfilTestCase):
+    """US4: login wall, next return, logout POST, authenticated login redirect."""
+
+    def test_anonymous_get_perfil_redirects_to_login_with_next(self):
+        response = self.anon.get(self.perfil_url)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/accounts/login/", response.url)
+        self.assertIn("next=", response.url)
+        self.assertIn("/misas/perfil/", response.url)
+        self.assertNotContains(response, self.user.username, status_code=302)
+
+    def test_login_then_next_returns_perfil(self):
+        login_url = reverse("login")
+        response = self.anon.post(
+            login_url,
+            {
+                "username": "perfilista",
+                "password": "password123",
+                "next": self.perfil_url,
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, self.perfil_url)
+        follow = self.anon.get(self.perfil_url)
+        self.assertEqual(follow.status_code, 200)
+        self.assertContains(follow, self.user.username)
+
+    def test_authenticated_get_login_redirects_away_from_form(self):
+        self.login()
+        response = self.client.get(reverse("login"))
+        self.assertEqual(response.status_code, 302)
+        self.assertNotEqual(response.url, reverse("login"))
+
+    def test_post_logout_returns_visitor_navbar(self):
+        self.login()
+        response = self.client.post(reverse("logout"))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, "/misas/")
+        follow = self.client.get(self.index_url)
+        self.assertEqual(follow.status_code, 200)
+        self.assertContains(follow, ">Iniciar sesión</a>")
+        self.assertNotContains(follow, "Mi perfil")
+
+    def test_get_logout_does_not_log_user_out(self):
+        self.login()
+        response = self.client.get(reverse("logout"))
+        self.assertNotEqual(response.status_code, 302)
+        still = self.client.get(self.index_url)
+        self.assertContains(still, "Mi perfil")
+        self.assertNotContains(still, ">Iniciar sesión</a>")

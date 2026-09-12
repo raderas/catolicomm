@@ -5,6 +5,7 @@ from . import views
 app_name = "misas"
 urlpatterns = [
     path("", views.index, name="index"),
+    path("perfil/", views.mi_perfil, name="perfil"),
     # path("{% url misas:templo uuid:templo_id %}", views.TemploView.as_view(), name="templo"),
     path("templos/", views.IndexView.as_view(), name="lista_templos"),
     path("templo/<uuid:pk>/", views.TemploView.as_view(), name="templo"),

@@ -18,10 +18,16 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.views import LoginView
 from django.urls import include, path
 
 urlpatterns = [
     path("misas/", include("misas.urls")),
+    path(
+        "accounts/login/",
+        LoginView.as_view(redirect_authenticated_user=True),
+        name="login",
+    ),
     path("accounts/", include("django.contrib.auth.urls")),
     path("admin/", admin.site.urls),
 ]

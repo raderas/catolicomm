@@ -4,19 +4,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('misas', '0009_templo_imagen_url'),
+        ("misas", "0009_templo_imagen_url"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='templo',
-            name='imagen_url',
+            model_name="templo",
+            name="imagen_url",
         ),
         migrations.AddField(
-            model_name='templo',
-            name='imagen',
-            field=models.ImageField(blank=True, null=True, upload_to='templos/', verbose_name='Fotografía'),
+            model_name="templo",
+            name="imagen",
+            field=models.ImageField(
+                blank=True, null=True, upload_to="templos/", verbose_name="Fotografía"
+            ),
         ),
     ]

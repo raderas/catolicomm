@@ -92,12 +92,12 @@ WSGI_APPLICATION = "site1.wsgi.application"
 DATABASES = {
     # if using PostgreSQL
     "default": {
-       "ENGINE": "django.db.backends.postgresql",
-       "NAME": os.environ.get("DB_NAME"),
-       "USER": os.environ.get("DB_USER"),
-       "PASSWORD": os.environ.get("DB_PASSWORD"),
-       "HOST": os.environ.get("DB_HOST"),
-       "PORT": os.environ.get("DB_PORT"),
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "HOST": os.environ.get("DB_HOST"),
+        "PORT": os.environ.get("DB_PORT"),
     }
     # # if using MySQL
     # "default": {
@@ -169,8 +169,19 @@ if "test" in sys.argv:
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
+DEFAULT_FROM_EMAIL = os.environ.get(
+    "DEFAULT_FROM_EMAIL", "Catolicomm <noreply@localhost>"
+)
+
 MAILERS = {
     "default": {
         "BACKEND": "django.core.mail.backends.console.EmailBackend",
     },
 }
+
+if "test" in sys.argv:
+    MAILERS = {
+        "default": {
+            "BACKEND": "django.core.mail.backends.locmem.EmailBackend",
+        },
+    }

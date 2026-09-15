@@ -21,12 +21,47 @@ from django.contrib import admin
 from django.contrib.auth.views import LoginView
 from django.urls import include, path
 
+from misas.forms import AutenticacionForm
+from misas.views import (
+    VisitantePasswordResetConfirmView,
+    VisitantePasswordResetView,
+    confirmar_correo,
+    crear_cuenta,
+    cuenta_creada,
+    reenviar_confirmacion,
+)
+
 urlpatterns = [
     path("misas/", include("misas.urls")),
     path(
         "accounts/login/",
-        LoginView.as_view(redirect_authenticated_user=True),
+        LoginView.as_view(
+            redirect_authenticated_user=True,
+            authentication_form=AutenticacionForm,
+        ),
         name="login",
+    ),
+    path("accounts/crear-cuenta/", crear_cuenta, name="crear_cuenta"),
+    path("accounts/cuenta-creada/", cuenta_creada, name="cuenta_creada"),
+    path(
+        "accounts/confirmar/<uidb64>/<token>/",
+        confirmar_correo,
+        name="confirmar_correo",
+    ),
+    path(
+        "accounts/reenviar-confirmacion/",
+        reenviar_confirmacion,
+        name="reenviar_confirmacion",
+    ),
+    path(
+        "accounts/password_reset/",
+        VisitantePasswordResetView.as_view(),
+        name="password_reset",
+    ),
+    path(
+        "accounts/reset/<uidb64>/<token>/",
+        VisitantePasswordResetConfirmView.as_view(),
+        name="password_reset_confirm",
     ),
     path("accounts/", include("django.contrib.auth.urls")),
     path("admin/", admin.site.urls),

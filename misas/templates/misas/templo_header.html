@@ -17,7 +17,12 @@
         <!-- Información General -->
         <div class="col-12 col-md-7 p-4 d-flex flex-column justify-content-between">
             <div>
-                <h1 class="font-serif text-brand-primary fw-bold mb-2">{{ templo.nombre }}</h1>
+                <h1 class="font-serif text-brand-primary fw-bold mb-2">{{ templo.nombre }}{% if not templo.verificado %}*{% endif %}</h1>
+                {% if templo.verificado %}
+                    <p class="text-brand-muted small mb-3">
+                        <i class="bi bi-check-circle-fill text-warning me-1"></i>Verificado
+                    </p>
+                {% endif %}
                 <p class="text-brand-muted mb-3">
                     <i class="bi bi-geo-alt-fill text-warning me-2"></i>{{ templo.direccion }}
                 </p>
@@ -26,18 +31,41 @@
                         <i class="bi bi-telephone-fill me-2"></i>{{ templo.telefono }}
                     </p>
                 {% endif %}
+                {% if templo.facebook %}
+                    <p class="text-brand-muted small mb-3">
+                        <i class="bi bi-facebook me-2"></i>
+                        <a href="{{ templo.facebook }}" target="_blank" rel="noopener noreferrer">{{ templo.facebook }}</a>
+                    </p>
+                {% endif %}
             </div>
 
             <!-- Acciones Rápidas -->
-            <div class="d-flex gap-2 pt-3 border-top border-subtle">
-                <a href="https://maps.google.com/?q={{ templo.direccion|urlencode }}" target="_blank" class="btn btn-gold btn-sm">
-                    <i class="bi bi-map-fill me-1"></i> Cómo llegar
-                </a>
-                {% if templo.telefono %}
-                    <a href="tel:{{ templo.telefono }}" class="btn btn-outline-brand btn-sm">
-                        <i class="bi bi-telephone me-1"></i> Llamar
+            <div>
+                <div class="d-flex flex-wrap gap-2 pt-3 border-top border-subtle">
+                    <a href="https://maps.google.com/?q={{ templo.direccion|urlencode }}" target="_blank" class="btn btn-gold btn-sm">
+                        <i class="bi bi-map-fill me-1"></i> Cómo llegar
                     </a>
+                    {% if templo.telefono %}
+                        <a href="tel:{{ templo.telefono }}" class="btn btn-outline-brand btn-sm">
+                            <i class="bi bi-telephone me-1"></i> Llamar
+                        </a>
+                    {% endif %}
+                    {% if user.is_staff %}
+                        <form action="{% url 'misas:verificar_templo' templo.id %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                            {% if templo.verificado %}
+                                <button type="submit" name="verificado" value="0" class="btn btn-outline-brand btn-sm">Quitar verificación</button>
+                            {% else %}
+                                <button type="submit" name="verificado" value="1" class="btn btn-outline-brand btn-sm">Marcar como verificado</button>
+                            {% endif %}
+                        </form>
+                    {% endif %}
+                </div>
+                {% if not templo.verificado %}
+                    <p class="text-brand-muted small mb-0 mt-3">La información de este templo aún está sujeta a validación.</p>
                 {% endif %}
+                <p class="text-brand-muted small mb-0 mt-2">La información y horarios pueden estar sujetos a modificaciones o excepciones en fechas especiales/festividades.</p>
             </div>
         </div>
     </div>

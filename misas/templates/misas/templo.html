@@ -41,7 +41,7 @@
                             {% for dia_servicios, horas in horario.items %}
                             <div class="list-group-item bg-transparent border-subtle d-flex justify-content-between align-items-center py-3">
                                 <span class="fw-bold text-brand-primary fs-5 me-2">
-                                    <i class="bi bi-clock text-warning me-1"></i> {{ dia_servicios }} - {{ horas }}
+                                    <i class="bi bi-clock text-warning me-1"></i> {{ dia_servicios }} - {{ horas|join:", " }}
                                 </span>
                             </div>
                             {% endfor %}

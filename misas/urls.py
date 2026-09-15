@@ -20,4 +20,9 @@ urlpatterns = [
         views.templo_servicios_edit,
         name="templo_servicios",
     ),
+    path(
+        "templo/<uuid:id_templo>/verificar/",
+        views.templo_verificar,
+        name="verificar_templo",
+    ),
 ]

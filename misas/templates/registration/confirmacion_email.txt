@@ -1,0 +1,7 @@
+Hola,
+
+Confirma tu cuenta en Catolicomm abriendo este enlace:
+
+{{ confirm_url }}
+
+Si no creaste esta cuenta, puedes ignorar este correo.

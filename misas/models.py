@@ -25,6 +25,25 @@ class BaseModel(models.Model):
         abstract = True
 
 
+def format_hora_12h(value: datetime.time) -> str:
+    """Display-only Spanish 12-hour clock. Does not change stored TimeField values."""
+    hour = value.hour
+    minute = value.minute
+    if hour == 0:
+        hour_12 = 12
+        suffix = "a. m."
+    elif hour < 12:
+        hour_12 = hour
+        suffix = "a. m."
+    elif hour == 12:
+        hour_12 = 12
+        suffix = "p. m."
+    else:
+        hour_12 = hour - 12
+        suffix = "p. m."
+    return f"{hour_12}:{minute:02d} {suffix}"
+
+
 class Templo(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     nombre = models.CharField(max_length=100)
@@ -35,6 +54,19 @@ class Templo(BaseModel):
     imagen = models.ImageField(
         "Fotografía", upload_to="templos/", null=True, blank=True
     )
+    facebook = models.URLField(
+        "Facebook",
+        max_length=500,
+        blank=True,
+        default="",
+    )
+    verificado = models.BooleanField(default=False)
+
+    def revocar_verificacion(self) -> None:
+        if not self.verificado:
+            return
+        self.verificado = False
+        self.save(update_fields=["verificado"])
 
     def get_servicios(self) -> dict:
         servicios = {}
@@ -44,7 +76,7 @@ class Templo(BaseModel):
             tipo_servicio = servicio.get_tipo_servicio_display()
             if tipo_servicio not in servicios:
                 servicios[tipo_servicio] = {}
-            hora_inicio = servicio.hora_inicio.strftime("%H:%M")
+            hora_inicio = format_hora_12h(servicio.hora_inicio)
             if dia_semana in servicios[tipo_servicio]:
                 servicios[tipo_servicio][dia_semana].append(hora_inicio)
             else:

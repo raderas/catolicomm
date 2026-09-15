@@ -5,7 +5,7 @@ from .models import Servicio, Templo
 
 
 class TemploAdmin(admin.ModelAdmin):
-    list_display = ("nombre", "alias", "direccion")
+    list_display = ("nombre", "alias", "direccion", "facebook", "verificado")
     seach_fields = ("nombre", "alias")
 
 

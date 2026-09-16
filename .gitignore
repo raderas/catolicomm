@@ -21,6 +21,7 @@ dist/
 .env*
 .vscode/
 .cursor/
+site1/settings/prod.py
 
 LocalReadme.md
 media/

@@ -1,0 +1,15 @@
+SECRET_KEY = 'put-secret-key'
+
+# Adding media root dir
+MEDIA_ROOT = BASE_DIR / "media"
+
+# Restrict allowed hosts to your live domain
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
+
+# Strict production security rules
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True

@@ -21,7 +21,7 @@ dist/
 .env*
 .vscode/
 .cursor/
-.cursor/skills/
+.cursorignore
 site1/settings/prod.py
 
 LocalReadme.md

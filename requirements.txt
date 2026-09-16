@@ -1,7 +1,7 @@
 pre-commit
 python-dotenv
 django
+django-debug-toolbar
 psycopg2-binary
 djlint
 Pillow
-mysqlclient
